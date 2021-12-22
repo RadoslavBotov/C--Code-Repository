@@ -1,16 +1,25 @@
-#include<iostream>
+#include <chrono>
+#include <iostream>
 
-bool CheckIfOdd(int num)
+using namespace std;
+using namespace std::chrono;
+
+int rec(int a)
 {
-    return num % 2 == 0;
+    if (a == 1)
+        return 1;
+    return a * rec(a - 1);
 }
 
 int main()
 {
-    int num = 100;
-    for (int i = 1; i < num / 2 + 1; i++)
-    {
-        std::cout << num << " % " << i << ": " << num % i << std::endl;
-    }
-    
+    long start, end, result;
+    long n = 5;
+
+    start = duration_cast<nanoseconds>(system_clock::now().time_since_epoch()).count();
+    result = rec(n);
+    end = duration_cast<nanoseconds>(system_clock::now().time_since_epoch()).count();
+    cout << n << "th factoriel = " << result << " (took " << end - start << "ns)" << endl;
+
+    return 0;
 }
