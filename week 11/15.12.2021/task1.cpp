@@ -3,11 +3,13 @@
 #include <iostream>
 using namespace std;
 
-void initializeMatrix(int **matrix, int n, int m)
+int **allocate(int n, int m)
 {
-    matrix = new int *[n];
+    int **matrix = new int *[n];
     for (int i = 0; i < n; ++i)
         matrix[i] = new int[m];
+
+    return matrix;
 }
 
 void inputMatrix(int **matrix, int n, int m)
@@ -39,11 +41,10 @@ void deleteMatrix(int **matrix, int n)
 int main()
 {
     int n, m;
-    int **matrix;
 
     cin >> n >> m;
 
-    initializeMatrix(matrix, n, m);
+    int **matrix = allocate(n, m);
 
     inputMatrix(matrix, n, m);
     printMatrix(matrix, n, m);

@@ -3,11 +3,13 @@
 #include <iomanip>
 using namespace std;
 
-void initializeMatrix(int **matrix, int n, int m)
+int **allocate(int n, int m)
 {
-    matrix = new int *[n];
+    int **matrix = new int *[n];
     for (int i = 0; i < n; ++i)
         matrix[i] = new int[m];
+
+    return matrix;
 }
 
 void inputArray(int *arr, int size)
@@ -46,9 +48,7 @@ int main()
 {
     int n = 4, m = 4;
     int *arr = new int[n * m];
-    int **matrix;
-
-    initializeMatrix(matrix, n, m);
+    int **matrix = allocate(n, m);
 
     inputArray(arr, n * m);
     transferMatrix(matrix, arr, n, m);
