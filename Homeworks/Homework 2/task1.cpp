@@ -1,5 +1,4 @@
 #include <iostream>
-#include <cstring>
 using namespace std;
 
 void inputMatrixSize(int &N1, int &M1, int &N2, int &M2)
@@ -70,17 +69,17 @@ void transformMatrix(int **matrixA, int **matrixB, int &N1, int &M1, int N2, int
 {
     if (N2 < N1)
     {
-        // for (int i = N2; i < N1; i++)
-        //     for (int j = 0; j < M1; j++)
-        //         delete (matrixA[i] + j);
+        for (int i = N2; i < N1; i++)
+            for (int j = 0; j < M1; j++)
+                delete[] (*(matrixA + i) + j);
         N1 = N2;
     }
 
     if (M2 < M1)
     {
-        // for (int i = 0; i < N1; i++)
-        //     for (int j = M2; j < M1; j++)
-        //         delete (matrixA[i] + j);
+        for (int i = 0; i < N1; i++)
+            for (int j = M2; j < M1; j++)
+                delete[] (*(matrixA + i) + j);
         M1 = M2;
     }
 
@@ -93,17 +92,23 @@ void transformMatrix(int **matrixA, int **matrixB, int &N1, int &M1, int N2, int
 
     std::cout << std::endl;
     printMatrix(matrixA, N1, M1);
-    std::cout << N1 << " " << M1;
 }
 
 int main()
 {
-    char s[13] = "scott>=tiger";
-    char delimiter[3] = ">=";
-    std::string token = s.str(0, s.find(delimiter));
+    int N1, M1, N2, M2;
+    inputMatrixSize(N1, M1, N2, M2);
 
-    cout << s << endl;
-    cout << token << endl;
+    int **matrixA = allocateMatrixMemmory(N1, M1);
+    int **matrixB = allocateMatrixMemmory(N2, M2);
+
+    inputMatrix(matrixA, N1, M1);
+    inputMatrix(matrixB, N2, M2);
+
+    transformMatrix(matrixA, matrixB, N1, M1, N2, M2);
+
+    deleteMatrixMemmory(matrixA, N1, M1);
+    deleteMatrixMemmory(matrixB, N2, M2);
 
     return 0;
 }
