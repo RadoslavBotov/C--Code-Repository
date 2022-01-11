@@ -1,109 +1,79 @@
 #include <iostream>
-#include <cstring>
-using namespace std;
 
-void inputMatrixSize(int &N1, int &M1, int &N2, int &M2)
+bool outOfBounds(int x, int y, int n, int m)
 {
-    do
-    {
-        std::cout << "> N1: ";
-        std::cin >> N1;
-    } while (N1 <= 0);
-
-    do
-    {
-        std::cout << "> M1: ";
-        std::cin >> M1;
-    } while (M1 <= 0);
-
-    do
-    {
-        std::cout << "> N2: ";
-        std::cin >> N2;
-    } while (N2 <= 0);
-
-    do
-    {
-        std::cout << "> M2: ";
-        std::cin >> M2;
-    } while (M2 <= 0);
+    return x < 0 || y < 0 || x >= n || y >= m;
 }
 
-int **allocateMatrixMemmory(int n, int m)
+void findPath(char **lab, int n, int m, int x, int y, int finalX, int finalY, char *path, int pathIndex)
 {
-    int **matrix = new int *[n];
-
-    for (int i = 0; i < n; i++)
-        matrix[i] = new int[m];
-
-    return matrix;
-}
-
-void deleteMatrixMemmory(int **matrix, int n, int m)
-{
-    for (int i = 0; i < n; i++)
-        delete[] matrix[i];
-
-    delete[] matrix;
-}
-
-void inputMatrix(int **matrix, int n, int m)
-{
-    cout << "> Matrix:\n";
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < m; j++)
-            cin >> matrix[i][j];
-}
-
-void printMatrix(int **matrix, int n, int m)
-{
-    for (int i = 0; i < n; i++)
+    if (outOfBounds(x, y, n, m) || lab[x][y] == 'X')
     {
-        for (int j = 0; j < m; j++)
-            std::cout << matrix[i][j] << " ";
-
-        std::cout << std::endl;
+        return;
     }
-}
-
-void transformMatrix(int **matrixA, int **matrixB, int &N1, int &M1, int N2, int M2)
-{
-    if (N2 < N1)
+    if (x == finalX && y == finalY)
     {
-        // for (int i = N2; i < N1; i++)
-        //     for (int j = 0; j < M1; j++)
-        //         delete (matrixA[i] + j);
-        N1 = N2;
+        path[pathIndex] = '\0';
+        std::cout << path << std::endl;
+        return;
     }
 
-    if (M2 < M1)
-    {
-        // for (int i = 0; i < N1; i++)
-        //     for (int j = M2; j < M1; j++)
-        //         delete (matrixA[i] + j);
-        M1 = M2;
-    }
+    lab[x][y] = 'X';
 
-    for (int i = 0; i < N1; i++)
-        for (int j = 0; j < M1; j++)
-            if (matrixA[i][j] < matrixB[i][j])
-                matrixA[i][j] = matrixB[i][j];
-            else if (matrixA[i][j] > matrixB[i][j])
-                matrixA[i][j] *= -1;
+    x = x + 1;
+    path[pathIndex++] = 'D';
+    findPath(lab, n, m, x, y, finalX, finalY, path, pathIndex);
+    pathIndex--;
+    x = x - 1;
 
-    std::cout << std::endl;
-    printMatrix(matrixA, N1, M1);
-    std::cout << N1 << " " << M1;
+    y = y + 1;
+    path[pathIndex++] = 'R';
+    findPath(lab, n, m, x, y, finalX, finalY, path, pathIndex);
+    pathIndex--;
+    y = y - 1;
+
+    x = x - 1;
+    path[pathIndex++] = 'U';
+    findPath(lab, n, m, x, y, finalX, finalY, path, pathIndex);
+    pathIndex--;
+    x = x + 1;
+
+    y = y - 1;
+    path[pathIndex++] = 'L';
+    findPath(lab, n, m, x, y, finalX, finalY, path, pathIndex);
+    pathIndex--;
+    y = y + 1;
+
+    lab[x][y] = '*';
 }
 
 int main()
 {
-    char s[13] = "scott>=tiger";
-    char delimiter[3] = ">=";
-    std::string token = s.str(0, s.find(delimiter));
+    int n, m;
+    std::cin >> n >> m;
+    char **lab = new char *[n];
+    for (int i = 0; i < n; i++)
+    {
+        lab[i] = new char[m];
+    }
 
-    cout << s << endl;
-    cout << token << endl;
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            std::cin >> lab[i][j];
+        }
+    }
+
+    char *path = new char[n * m];
+    findPath(lab, n, m, 0, 0, n - 1, m - 1, path, 0);
+
+    delete[] path;
+    for (int i = 0; i < n; i++)
+    {
+        delete[] lab[i];
+    }
+    delete[] lab;
 
     return 0;
 }

@@ -38,7 +38,7 @@ int **allocateMatrixMemmory(int n, int m)
     return matrix;
 }
 
-void deleteMatrixMemmory(int **matrix, int n, int m)
+void deleteMatrixMemmory(int **matrix, int n)
 {
     for (int i = 0; i < n; i++)
         delete[] matrix[i];
@@ -68,20 +68,10 @@ void printMatrix(int **matrix, int n, int m)
 void transformMatrix(int **matrixA, int **matrixB, int &N1, int &M1, int N2, int M2)
 {
     if (N2 < N1)
-    {
-        for (int i = N2; i < N1; i++)
-            for (int j = 0; j < M1; j++)
-                delete[] (*(matrixA + i) + j);
         N1 = N2;
-    }
 
     if (M2 < M1)
-    {
-        for (int i = 0; i < N1; i++)
-            for (int j = M2; j < M1; j++)
-                delete[] (*(matrixA + i) + j);
         M1 = M2;
-    }
 
     for (int i = 0; i < N1; i++)
         for (int j = 0; j < M1; j++)
@@ -107,8 +97,8 @@ int main()
 
     transformMatrix(matrixA, matrixB, N1, M1, N2, M2);
 
-    deleteMatrixMemmory(matrixA, N1, M1);
-    deleteMatrixMemmory(matrixB, N2, M2);
+    deleteMatrixMemmory(matrixA, N1);
+    deleteMatrixMemmory(matrixB, N2);
 
     return 0;
 }
