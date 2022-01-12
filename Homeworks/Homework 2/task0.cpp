@@ -1,5 +1,5 @@
 #include <iostream>
-using namespace std;
+#include <cstring>
 
 char **allocateMatrixMemmory(int dictionarySize)
 {
@@ -32,10 +32,11 @@ int inputTextSizeTask0(int textSize)
 
 void inputTextTask0(char *text, int textSize)
 {
-    cin.get();
-    cout << "> Text:" << endl;
+    std::cin.get();
+    std::cout << "> Text:" << std::endl;
     for (int i = 0; i < textSize; i++)
-        cin.get(text[i]);
+        std::cin.get(text[i]);
+    text[textSize] = '\0';
 }
 
 int inputDictionarySizeTask0(int dictionarySize)
@@ -51,54 +52,96 @@ int inputDictionarySizeTask0(int dictionarySize)
 
 void inputDictionaryTask0(char **dictionary, int dictionarySize)
 {
-    cin.get();
+    std::cin.get();
     if (dictionarySize != 0)
     {
-        cout << "> Dictionary:" << endl;
+        std::cout << "> Dictionary:" << std::endl;
         for (int i = 0; i < dictionarySize; i++)
-            cin.getline(dictionary[i], 100);
+            std::cin.getline(dictionary[i], 100);
     }
 }
 
-bool shouldAddSpaceAfter(char symbol)
+int shouldAddSpace(char *text, char symbol)
 {
     switch (symbol)
     {
     case '.':
-        return true;
+        return 0;
         break;
     case ',':
-        return true;
+        return 0;
         break;
     case '?':
-        return true;
+        return 0;
         break;
     case '!':
-        return true;
+        return 0;
         break;
     case ';':
-        return true;
+        return 0;
         break;
     case ':':
-        return true;
-        break;
-    case '-':
-        return true;
+        return 0;
         break;
     case '"':
-        return true;
+        return 0;
         break;
-    case ')': // ) ] } >
-        return true;
+    case ')':
+        return 0;
         break;
-
+    case ']':
+        return 0;
+        break;
+    case '}':
+        return 0;
+        break;
+    case '>':
+        return 0;
+        break;
+    case '(':
+        return 1;
+        break;
+    case '[':
+        return 1;
+        break;
+    case '{':
+        return 1;
+        break;
+    case '<':
+        return 1;
+        break;
+    case '-':
+        return 2;
+        break;
+    case '+':
+        return 2;
+        break;
+    case '*':
+        return 2;
+        break;
+    case '/':
+        return 2;
+        break;
+    case '=':
+        return 2;
+        break;
+    case '^':
+        return 2;
+        break;
     default:
-        return false;
+        return 3;
         break;
     }
 }
 
-void addSpaceRight(char *arr, int &textSize, int index, char symbol = ' ')
+void removeElementAt(char *text, int &size, int index)
+{
+    size--;
+    for (int i = index; i <= size; i++)
+        text[i] = text[i + 1];
+}
+
+void addSpaceAt(char *arr, int &textSize, int index, char symbol = ' ')
 {
     textSize++;
     for (int i = textSize; i > index; i--)
@@ -106,71 +149,123 @@ void addSpaceRight(char *arr, int &textSize, int index, char symbol = ' ')
     arr[index] = symbol;
 }
 
-void addSpaceLeft(char *arr, int &textSize, int index, char symbol = ' ')
+char *getWrongWord(char *wrongWord, char *word)
 {
-    textSize++;
-    for (int i = textSize; i > index + 1; i--)
-        arr[i] = arr[i - 1];
-    arr[index + 1] = symbol;
-}
+    int i = 0;
+    wrongWord = new char[strlen(word) + 1];
 
-void removeDupWord(string str)
-{
-    string word = "";
-    for (auto x : str)
+    while (word[i] != '-')
     {
-        if (x == ' ')
-        {
-            cout << word << endl;
-            word = "";
-        }
-        else
-        {
-            word = word + x;
-        }
+        wrongWord[i] = word[i];
+        i++;
     }
-    cout << word << endl;
+    wrongWord[i] = '\0';
+    return wrongWord;
 }
 
-void punctuation(char *text)
+void dictionaryCorrections(char *word, char *text, char **dictionary, int &textSize, int dictionarySize)
 {
+    for (int i = 0; i < dictionarySize; i++)
+    {
+        char *wrongWord = getWrongWord(wrongWord, dictionary[i]);
+        int wrongWordSize = strlen(wrongWord);
+
+        char *correctWord = strchr(dictionary[i], '-') + 1;
+        int correctWordSize = strlen(correctWord);
+
+        if (!strcmp(word, wrongWord))
+        {
+            // if (wrongWordSize < correctWordSize)
+            //     for (int j = 0; j < correctWordSize - wrongWordSize; j++)
+            //         addSpaceAt(text, textSize, i);
+
+            // if (wrongWordSize > correctWordSize)
+            //     for (int j = 0; j < wrongWordSize - correctWordSize; j++)
+            //         removeElementAt(text, textSize, i);
+
+            if (wrongWordSize == correctWordSize)
+                strncpy(text - strlen(word), correctWord, correctWordSize);
+            // textSize += correctWordSize - wrongWordSize;
+        }
+
+        delete[] wrongWord;
+    }
 }
 
 void autoCorrect(char *text, char **dictionary, int textSize, int dictionarySize)
 {
-    for (int i = 0; i < textSize; i++)
+    for (int i = 0; i < textSize; i++) // punctuation
     {
-        cout << "< " << i << " " << text[i] << endl;
-        if (shouldAddSpaceAfter(text[i]))
+        switch (shouldAddSpace(text, text[i]))
+        {
+        case 0:
             if (text[i + 1] != ' ')
-                addSpaceRight(text, textSize, i);
+                addSpaceAt(text, textSize, i + 1);
+            break;
+        case 1:
+            if (text[i - 1] != ' ')
+                addSpaceAt(text, textSize, i);
+            break;
+        case 2:
+            if (text[i + 1] != ' ')
+                addSpaceAt(text, textSize, i + 1);
+            if (text[i - 1] != ' ')
+                addSpaceAt(text, textSize, i);
+            break;
+        }
     }
+
+    int t = 0;
+    int index = 0;
+    char word[100];
+
+    while (*text) // get every word of text
+    {
+        bool a = *text >= 'a' && *text <= 'z';
+        bool b = *text >= 'A' && *text <= 'Z';
+        bool c = *text >= '0' && *text <= '9';
+        if (a || b || c)
+        {
+            word[t] = *text;
+            t++;
+        }
+        else
+        {
+            word[t] = '\0';
+
+            
+            if (*word != '\0')
+                dictionaryCorrections(word, text, dictionary, textSize, dictionarySize);
+
+            word[0] = '\0';
+            t = 0;
+        }
+        text++;
+        index++;
+    }
+    dictionaryCorrections(word, text, dictionary, textSize, dictionarySize);
+    std::cout << word << std::endl;
+
+    std::cout << "\nRedacted text:\n"
+              << text << std::endl;
 }
 
 int main()
 {
-    // const unsigned MAX_LEN = 1024;
-    // //...
-
-    // char buffer[MAX_LEN];
-    // std::cin.getline(buffer, '\n');
-
-    // char *str = new char[strlen(buffer) + 1];
-    // //+1 заради '\0' накрая
-    // strcpy(str, buffer);
+    const unsigned MAX_LEN = 1024;
+    char buffer[MAX_LEN];
 
     int textSize = inputTextSizeTask0(textSize);
-    char *text = new char[textSize];
-    inputTextTask0(text, textSize);
+    inputTextTask0(buffer, textSize);
+
+    char *text = new char[textSize + 1];
+    strcpy(text, buffer);
 
     int dictionarySize = inputDictionarySizeTask0(dictionarySize);
     char **dictionary = allocateMatrixMemmory(dictionarySize);
     inputDictionaryTask0(dictionary, dictionarySize);
 
-    autoCorrect(text, dictionary, textSize + 1, dictionarySize);
-
-    cout << "\nRedacted text:\n"
-         << text;
+    autoCorrect(text, dictionary, textSize, dictionarySize);
 
     delete[] text;
     deleteMatrixMemmory(dictionary, dictionarySize);
@@ -178,32 +273,26 @@ int main()
     return 0;
 }
 /*
-Аня има проблем с правописа и често допуска грешки, пишейки документация на софтуера, който разработва. Затова ѝ е хрумнала
-добрата идея да напише софтуер, който да ги поправя вместо нея. Възможни автоматично поправими грешки са:
-
-    пропуснат интервал около препинателен знак:
-        интервал се слага след всеки препинателен знак с изключение на отваряща скоба и отварящи кавички;
-        интервал се слага преди тире, аритметична операция, отваряща скоба и отварящи кавички;
-    сгрешен правопис на дума или фраза;
-        за корекция на сгрешени думи или фрази, софтуерът използва помощен речник;
-        речникът представлява поредица от двойки от сгрешена дума или фраза и правилното ѝ изписване, разделени със знак за тире;
     изпуснат знак за край на изречението:
         софтуерът определя дали е достигнат краят на изречението тогава и само тогава, когато следващата дума започва на нов ред или няма
         следваща дума;
         приемаме, че всяко такова изречение би завършило с точка;
         ако изречението завършва със затварящи кавички, точката се слага преди тях.
 
-Да се напише функция autoCorrect, която по зададен текст за редакция и речник, както е описан по-горе, извежда на екрана
-редактирания текст. Функцията да приема параметри с подходящ тип. Да се реализира подходяща програма, която демонстрира
-работата на функцията като въвежда текст за редакция и речник и ги подава като параметри.
-Допуска се използването на помощни функции.
+    "Въведен" стринг(151):
+Math 101:1+1=2,2-3=-1,5*5=25,9/3=3,2^3=8,2(3+4)=14
+Dont you ever jyst .,;:!?.
+A wise man once said:\"djundjalunga\"
+And an een wiser man said \"bruh.\"
 
-    Ограничения
-    Записите в речника имат максимална дължина от 100 символа.
-    Дължината на текста след извършените корекции не може да надвишава 2048 символа.
-
-    "Въведен" стринг(149): "Math 101:1+1=2,2-3=-1,5*5=25,9/3=3,2^3=8,2(3+4)=14\nDont you ever jyst .,;:!?.\nA wise man once said:\"djundjalunga\"\nAnd an een wiser man said \"bruh.\"\n"
-    Речник(7): { "Dont-Don't", "jyst-just", "djundjalunga-Oops", "een-even", "bruh-No", "said -said:", "wizer-wiser" }
+    Речник(7):
+Dont-Don't
+jyst-just
+djundjalunga-Oops
+een-even
+bruh-No
+said -said:
+wizer-wiser
 
     Output:
     Math 101: 1 + 1 = 2, 2 - 3 =  - 1, 5 * 5 = 25, 9 / 3 = 3, 2 ^ 3 = 8, 2 (3 + 4) = 14.
