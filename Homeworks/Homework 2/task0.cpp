@@ -95,9 +95,6 @@ int shouldAddSpace(char *text, char symbol)
     case '}':
         return 0;
         break;
-    case '>':
-        return 0;
-        break;
     case '(':
         return 1;
         break;
@@ -105,9 +102,6 @@ int shouldAddSpace(char *text, char symbol)
         return 1;
         break;
     case '{':
-        return 1;
-        break;
-    case '<':
         return 1;
         break;
     case '-':
@@ -128,20 +122,22 @@ int shouldAddSpace(char *text, char symbol)
     case '^':
         return 2;
         break;
-    default:
+        break;
+    case '>':
+        return 2;
+        break;
+    case '<':
+        return 2;
+        break;
+    case '\n':
         return 3;
         break;
+    default:
+        return 4;
     }
 }
 
-void removeElementAt(char *text, int &size, int index)
-{
-    size--;
-    for (int i = index; i <= size; i++)
-        text[i] = text[i + 1];
-}
-
-void addSpaceAt(char *arr, int &textSize, int index, char symbol = ' ')
+void addElementAt(char *arr, int &textSize, int index, char symbol = ' ')
 {
     textSize++;
     for (int i = textSize; i > index; i--)
@@ -149,105 +145,108 @@ void addSpaceAt(char *arr, int &textSize, int index, char symbol = ' ')
     arr[index] = symbol;
 }
 
-char *getWrongWord(char *wrongWord, char *word)
+void addSpaceAtPointer(char *text, char *str, int &textSize, int &strSize)
 {
-    int i = 0;
-    wrongWord = new char[strlen(word) + 1];
+    textSize++;
+    char *index = text + textSize;
 
-    while (word[i] != '-')
+    while (index != str)
     {
-        wrongWord[i] = word[i];
-        i++;
+        *index = *(index - 1);
+        index--;
     }
-    wrongWord[i] = '\0';
-    return wrongWord;
 }
 
-void dictionaryCorrections(char *word, char *text, char **dictionary, int &textSize, int dictionarySize)
+void removeElementAt(char *text, char *str, int &textSize, int &strSize)
 {
-    for (int i = 0; i < dictionarySize; i++)
+    char *index = text + textSize;
+
+    while (str != index)
     {
-        char *wrongWord = getWrongWord(wrongWord, dictionary[i]);
-        int wrongWordSize = strlen(wrongWord);
-
-        char *correctWord = strchr(dictionary[i], '-') + 1;
-        int correctWordSize = strlen(correctWord);
-
-        if (!strcmp(word, wrongWord))
-        {
-            // if (wrongWordSize < correctWordSize)
-            //     for (int j = 0; j < correctWordSize - wrongWordSize; j++)
-            //         addSpaceAt(text, textSize, i);
-
-            // if (wrongWordSize > correctWordSize)
-            //     for (int j = 0; j < wrongWordSize - correctWordSize; j++)
-            //         removeElementAt(text, textSize, i);
-
-            if (wrongWordSize == correctWordSize)
-                strncpy(text - strlen(word), correctWord, correctWordSize);
-            // textSize += correctWordSize - wrongWordSize;
-        }
-
-        delete[] wrongWord;
+        *str = *(str + 1);
+        str++;
     }
+
+    textSize--;
 }
 
 void autoCorrect(char *text, char **dictionary, int textSize, int dictionarySize)
 {
+    bool openingQuotes = true;
     for (int i = 0; i < textSize; i++) // punctuation
     {
         switch (shouldAddSpace(text, text[i]))
         {
-        case 0:
-            if (text[i + 1] != ' ')
-                addSpaceAt(text, textSize, i + 1);
+        case 0: //   . , ; : ! ? ) ] }
+            if (text[i] == '"')
+                openingQuotes = !openingQuotes;
+            if (text[i + 1] != ' ' && openingQuotes)
+                addElementAt(text, textSize, i + 1);
             break;
-        case 1:
+        case 1: //   ( [ {
             if (text[i - 1] != ' ')
-                addSpaceAt(text, textSize, i);
+                addElementAt(text, textSize, i);
             break;
-        case 2:
+        case 2: //   + - * / = ^ > <
             if (text[i + 1] != ' ')
-                addSpaceAt(text, textSize, i + 1);
+                addElementAt(text, textSize, i + 1);
             if (text[i - 1] != ' ')
-                addSpaceAt(text, textSize, i);
+                addElementAt(text, textSize, i);
+            break;
+        case 3: // \n
+            if (text[i - 1] != '.')
+                addElementAt(text, textSize, i, '.');
             break;
         }
     }
 
-    int t = 0;
-    int index = 0;
-    char word[100];
-
-    while (*text) // get every word of text
+    if (dictionarySize != 0)
     {
-        bool a = *text >= 'a' && *text <= 'z';
-        bool b = *text >= 'A' && *text <= 'Z';
-        bool c = *text >= '0' && *text <= '9';
-        if (a || b || c)
-        {
-            word[t] = *text;
-            t++;
-        }
-        else
-        {
-            word[t] = '\0';
+        char **wrongWords = allocateMatrixMemmory(dictionarySize);
+        char **correctWords = allocateMatrixMemmory(dictionarySize);
 
-            
-            if (*word != '\0')
-                dictionaryCorrections(word, text, dictionary, textSize, dictionarySize);
-
-            word[0] = '\0';
-            t = 0;
+        char temp[101];
+        for (int i = 0; i < dictionarySize; i++) // Separate dictionary into 2 arrays: "wrong" words and "correct" words
+        {
+            int t = 0;
+            while (dictionary[i][t] != '-')
+            {
+                wrongWords[i][t] = dictionary[i][t];
+                t++;
+            }
+            wrongWords[i][t] = '\0';
+            strcpy(correctWords[i], strchr(dictionary[i], '-') + 1);
         }
-        text++;
-        index++;
+
+        for (int i = 0; i < dictionarySize; i++) // for each entry in dictionary
+        {
+            int wrongWordSize = strlen(wrongWords[i]);
+            int correctWordSize = strlen(correctWords[i]);
+
+            char *wrongWord = strstr(text, wrongWords[i]);
+
+            while (wrongWord != nullptr) // while there are "wrong" words in text
+            {
+                if (wrongWordSize < correctWordSize)
+                    for (int i = 0; i < correctWordSize - wrongWordSize; i++)
+                        addSpaceAtPointer(text, wrongWord, textSize, correctWordSize);
+                else if (wrongWordSize > correctWordSize)
+                    for (int i = 0; i < wrongWordSize - correctWordSize; i++)
+                        removeElementAt(text, wrongWord, textSize, correctWordSize);
+
+                strncpy(wrongWord, correctWords[i], correctWordSize);
+                wrongWord = strstr(text, wrongWords[i]);
+            }
+        }
+
+        deleteMatrixMemmory(wrongWords, dictionarySize);
+        deleteMatrixMemmory(correctWords, dictionarySize);
     }
-    dictionaryCorrections(word, text, dictionary, textSize, dictionarySize);
-    std::cout << word << std::endl;
 
-    std::cout << "\nRedacted text:\n"
-              << text << std::endl;
+    if (textSize < 2048)
+        std::cout << text << std::endl;
+    else
+        std::cout << "Text size bigger than 2048 after corrections!" << std::endl;
 }
 
 int main()
@@ -272,32 +271,3 @@ int main()
 
     return 0;
 }
-/*
-    изпуснат знак за край на изречението:
-        софтуерът определя дали е достигнат краят на изречението тогава и само тогава, когато следващата дума започва на нов ред или няма
-        следваща дума;
-        приемаме, че всяко такова изречение би завършило с точка;
-        ако изречението завършва със затварящи кавички, точката се слага преди тях.
-
-    "Въведен" стринг(151):
-Math 101:1+1=2,2-3=-1,5*5=25,9/3=3,2^3=8,2(3+4)=14
-Dont you ever jyst .,;:!?.
-A wise man once said:\"djundjalunga\"
-And an een wiser man said \"bruh.\"
-
-    Речник(7):
-Dont-Don't
-jyst-just
-djundjalunga-Oops
-een-even
-bruh-No
-said -said:
-wizer-wiser
-
-    Output:
-    Math 101: 1 + 1 = 2, 2 - 3 =  - 1, 5 * 5 = 25, 9 / 3 = 3, 2 ^ 3 = 8, 2 (3 + 4) = 14.
-    Don't you ever just . , ; : ! ? .
-    A wise man once said:  "Oops."
-    And an even wiser man said: "No."
-    .
-*/
