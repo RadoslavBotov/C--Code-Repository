@@ -1,13 +1,12 @@
 #include <iostream>
 #include <cstring>
+using namespace std;
 
 int main()
 {
-    char str[] = "12345";
+    int a = 10;
 
-    strncpy(str + 1, "  ", 2);
-
-    std::cout << str;
+    cout << (~a) << endl;
 
     return 0;
 }
