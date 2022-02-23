@@ -1,1 +1,0 @@
-And an een wiser man said \"bruh.\"
