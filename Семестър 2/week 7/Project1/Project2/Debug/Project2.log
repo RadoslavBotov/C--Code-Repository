@@ -1,0 +1,6 @@
+﻿  Source.cpp
+C:\Solutions\C++ Code Repository\Семестър 2\week 7\Project1\Project2\Source.cpp(111,25): warning C4018: '<': signed/unsigned mismatch
+C:\Solutions\C++ Code Repository\Семестър 2\week 7\Project1\Project2\Source.cpp(140,28): warning C4018: '<': signed/unsigned mismatch
+C:\Solutions\C++ Code Repository\Семестър 2\week 7\Project1\Project2\Source.cpp(166,23): warning C4018: '<': signed/unsigned mismatch
+C:\Solutions\C++ Code Repository\Семестър 2\week 7\Project1\Project2\Source.cpp(174,23): warning C4018: '<': signed/unsigned mismatch
+  Project2.vcxproj -> C:\Solutions\C++ Code Repository\Семестър 2\week 7\Project1\Debug\Project2.exe

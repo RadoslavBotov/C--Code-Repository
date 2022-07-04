@@ -1,0 +1,40 @@
+﻿  Source.cpp
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\include\doctest.h(1343,9): warning C4805: '==': unsafe mix of type 'T' and type 'T' in operation
+          with
+          [
+              T=bool
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Solutions\C++ Code Repository\Семестър 2\week 5\Project1\Task1.0\Source.cpp(11): message : see reference to function template instantiation 'doctest::detail::Result doctest::detail::Expression_lhs<const bool>::operator ==<int>(const R &&)' being compiled
+          with
+          [
+              R=int
+          ]
+C:\Solutions\C++ Code Repository\Семестър 2\week 5\Project1\Task1.0\Source.cpp(11): message : see reference to function template instantiation 'doctest::detail::Result doctest::detail::Expression_lhs<const bool>::operator ==<int>(const R &&)' being compiled
+          with
+          [
+              R=int
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\include\doctest.h(1344,9): warning C4805: '!=': unsafe mix of type 'T' and type 'T' in operation
+          with
+          [
+              T=bool
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Solutions\C++ Code Repository\Семестър 2\week 5\Project1\Task1.0\Source.cpp(17): message : see reference to function template instantiation 'doctest::detail::Result doctest::detail::Expression_lhs<const bool>::operator !=<int>(const R &&)' being compiled
+          with
+          [
+              R=int
+          ]
+C:\Solutions\C++ Code Repository\Семестър 2\week 5\Project1\Task1.0\Source.cpp(17): message : see reference to function template instantiation 'doctest::detail::Result doctest::detail::Expression_lhs<const bool>::operator !=<int>(const R &&)' being compiled
+          with
+          [
+              R=int
+          ]
+  Task1.0.vcxproj -> C:\Solutions\C++ Code Repository\Семестър 2\week 5\Project1\Debug\Task1_0.exe

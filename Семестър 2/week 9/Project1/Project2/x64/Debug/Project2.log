@@ -1,0 +1,7 @@
+﻿  Source.cpp
+C:\Solutions\C++ Code Repository\Семестър 2\week 9\Project1\Project2\Source.cpp(133,1): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\Solutions\C++ Code Repository\Семестър 2\week 9\Project1\Project2\Source.cpp(162,1): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\Solutions\C++ Code Repository\Семестър 2\week 9\Project1\Project2\Source.cpp(169,1): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\Solutions\C++ Code Repository\Семестър 2\week 9\Project1\Project2\Source.cpp(180,1): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\Solutions\C++ Code Repository\Семестър 2\week 9\Project1\Project2\Source.cpp(311,1): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+  Project2.vcxproj -> C:\Solutions\C++ Code Repository\Семестър 2\week 9\Project1\x64\Debug\Project2.exe
