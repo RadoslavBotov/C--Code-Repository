@@ -1,0 +1,15 @@
+The Mod C:\Games\Cities Skylines\Files\Mods\576327847 81 Tiles (Fixed for 1.2+) [CitiesHarmony.API.dll, EightyOne.dll] has caused an error [ModException]
+
+Details:
+System.MissingMethodException: Method not found: 'DistrictPark.get_IsAirport'.
+at (wrapper managed-to-native) System.RuntimeMethodHandle.GetFunctionPointer (intptr) <0x00065>
+at System.RuntimeMethodHandle.GetFunctionPointer () <0x00022>
+at EightyOne.RedirectionFramework.RedirectionHelper.RedirectCalls (System.Reflection.MethodInfo,System.Reflection.MethodInfo) <0x00089>
+at EightyOne.RedirectionFramework.RedirectionUtil.RedirectMethod (System.Type,System.Reflection.MethodInfo,bool) <0x002fd>
+at EightyOne.RedirectionFramework.RedirectionUtil.RedirectMethod (System.Type,System.Reflection.MethodInfo,System.Collections.Generic.Dictionary`2<System.Reflection.MethodInfo, EightyOne.RedirectionFramework.RedirectCallsState>,bool) <0x00031>
+at EightyOne.RedirectionFramework.RedirectionUtil.RedirectMethods (System.Type,System.Type,System.Collections.Generic.Dictionary`2<System.Reflection.MethodInfo, EightyOne.RedirectionFramework.RedirectCallsState>,bool) <0x000ad>
+at EightyOne.RedirectionFramework.RedirectionUtil.RedirectType (System.Type,bool) <0x002b1>
+at EightyOne.Detours.Redirect (bool) <0x0047b>
+at EightyOne.Detours.Deploy () <0x000d2>
+at EightyOne.LoadingExtension.OnLevelLoaded (ICities.LoadMode) <0x00032>
+at (wrapper dynamic-method) LoadingWrapper.LoadingWrapper.OnLevelLoaded_Patch1 (LoadingWrapper,SimulationManager/UpdateMode) <0x0008b>

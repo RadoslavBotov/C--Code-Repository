@@ -1,196 +1,91 @@
 #include<iostream>
-#include<fstream>
+#include<string>
 using namespace std;
 
-class A
+class Base
 {
 public:
-	A(const int& xParam = 0, const char* strParam = "\0")
+	Base()
 	{
-		x = xParam;
-		copy(str, strParam);
+		cout << "Base() ";
 	}
 	
-	A(const A& source)
+	~Base()
 	{
-		x = source.x;
-		copy(str, source.str);
-	}
-
-	A& operator = (const A& source)
-	{
-		if (this != &source)
-		{
-			delete[] str;
-
-			x = source.x;
-			copy(str, source.str);
-		}
-		return *this;
-	}
-
-	~A()
-	{
-		delete[] str;
+		cout << "~Base() ";
 	}
 
 	void print() const
 	{
-		cout << x << " " << str << " ";
-	}
-
-	void serialize(std::ofstream& out)
-	{
-		if (!out)
-			return;
-
-		out.write((const char*)&x, sizeof(int));
-
-		size_t size = strlen(str) + 1;
-		out.write((const char*)&size, sizeof(size_t));
-		out.write(str, size);
-	}
-
-	void deserialize(std::ifstream& in)
-	{
-		if (!in)
-			return;
-
-		in.read((char*)&x, sizeof(int));
-
-		size_t size = 0;
-
-		in.read((char*)&size, sizeof(size_t));
-		str = new char[size];
-		in.read(str, size);
-	}
-
-	void writeToFile(std::ofstream& out)
-	{
-		if (!out)
-			return;
-
-		out << x << " " << str;
-	}
-
-	void readFromFile(std::ifstream& in)
-	{
-		char buffer[128] = {};
-
-		in >> x;
-		in.get();
-
-		in.getline(buffer, 128, ' ');
-		delete[] str;
-		copy(str, buffer);
-	}
-
-private:
-	int x;
-	char* str;
-
-	void copy(char*& destination, const char* const& source)
-	{
-		size_t size = strlen(source) + 1;
-		destination = new char[size];
-		strcpy_s(destination, size, source);
+		cout << "\nBase::Print()\n";
 	}
 };
 
-class B
+class Der1 : virtual public Base
 {
 public:
-	B(int x, const char* str, int numberParam)
-		: character(x, str)
+	Der1() : Base()
 	{
-		number = numberParam;
+		cout << "Der1() ";
 	}
 
-	B(const A& objAParam, int numberParam)
-		: character(objAParam)
+	~Der1()
 	{
-		number = numberParam;
+		cout << "~Der1() ";
 	}
 
 	void print() const
 	{
-		character.print();
-		cout << number << endl;
+		cout << "\nDer1::Print()\n";
 	}
+};
 
-	void serialize(const char* filename)
+class Der2 : virtual public Base
+{
+public:
+	Der2() : Base()
 	{
-		std::ofstream out(filename, std::ios::binary);
-
-		if (!out)
-			return;
-
-		number++;
-
-		character.serialize(out);
-
-		out.write((const char*)&number, sizeof(int));
-
-		out.close();
+		cout << "Der2() ";
 	}
 
-	void deserialize(const char* filename)
+	~Der2()
 	{
-		std::ifstream in(filename, std::ios::binary);
-
-		if (!in)
-			return;
-
-		character.deserialize(in);
-
-		in.read((char*)&number, sizeof(int));
-
-		in.close();
+		cout << "~Der2() ";
 	}
 
-	void writeToFile(const char* filename)
+	void print() const
 	{
-		std::ofstream out(filename, std::ios::binary);
-
-		if (!out)
-			return;
-
-		character.writeToFile(out);
-		out << " " << number << endl;
-
-		out.close();
+		cout << "\nDer2::Print()\n";
 	}
+};
 
-	void readFromFile(const char* filename)
+class Der : public Der1, public Der2
+{
+public:
+	Der() : Der1(), Der2()
 	{
-		std::ifstream in(filename, std::ios::binary);
-
-		if (!in)
-			return;
-
-		character.readFromFile(in);
-
-		in >> number;
-		in.get();
-
-		in.close();
+		cout << "Der() ";
 	}
 
-private:
-	A character;
-	int number;
+	~Der()
+	{
+		cout << "~Der() ";
+	}
+
+	// Print fields current of Der object.
+	void print() const
+	{
+		cout << "\nDer::Print()\n";
+	}
 };
 
 int main()
 {
-	B b1(A(101, "!@#"), 5);
-	B b2(A(0, ""), 0);
-
-	b1.print();
-	b1.writeToFile("textFile.txt");
-
-	b2.readFromFile("textFile.txt");
-	b2.print();
+	Der d;
+	((Base*)&d)->print();
+	//((Der1&)d).print();
+	//((Der2&)d).print();
+	//((Der&)d).print();
 
 	return 0;
 }

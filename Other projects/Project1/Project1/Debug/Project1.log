@@ -1,0 +1,6 @@
+﻿  RenderState.cpp
+  MyWindow.cpp
+C:\Solutions\C++ Code Repository\Other projects\Project1\Project1\MyWindow.cpp(133,18): warning C4244: '=': conversion from 'double' to 'unsigned int', possible loss of data
+  Generating Code...
+MyWindow.obj : error LNK2005: "struct RenderState my_render_state" (?my_render_state@@3URenderState@@A) already defined in RenderState.obj
+C:\Solutions\C++ Code Repository\Other projects\Project1\Debug\Project1.exe : fatal error LNK1169: one or more multiply defined symbols found
